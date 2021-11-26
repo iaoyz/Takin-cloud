@@ -12,12 +12,7 @@ import io.shulie.takin.cloud.biz.input.scenemanage.SceneTaskStartInput;
 import io.shulie.takin.cloud.biz.input.scenemanage.SceneTaskUpdateTpsInput;
 import io.shulie.takin.cloud.biz.output.report.SceneInspectTaskStartOutput;
 import io.shulie.takin.cloud.biz.output.report.SceneInspectTaskStopOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneActionOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneJobStateOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTaskQueryTpsOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTaskStartCheckOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTryRunTaskStartOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTryRunTaskStatusOutput;
+import io.shulie.takin.cloud.biz.output.scenetask.*;
 import io.shulie.takin.cloud.biz.service.report.ReportService;
 import io.shulie.takin.cloud.biz.service.scene.SceneTaskService;
 import io.shulie.takin.cloud.common.constants.APIUrls;
@@ -25,12 +20,7 @@ import io.shulie.takin.cloud.open.entrypoint.convert.SceneTaskOpenConverter;
 import io.shulie.takin.cloud.open.req.engine.EnginePluginsRefOpen;
 import io.shulie.takin.cloud.open.req.scenemanage.SceneManageIdReq;
 import io.shulie.takin.cloud.open.req.scenemanage.SceneTaskStartReq;
-import io.shulie.takin.cloud.open.req.scenetask.SceneStartCheckResp;
-import io.shulie.takin.cloud.open.req.scenetask.SceneTaskUpdateTpsReq;
-import io.shulie.takin.cloud.open.req.scenetask.SceneTryRunTaskStartReq;
-import io.shulie.takin.cloud.open.req.scenetask.TaskFlowDebugStartReq;
-import io.shulie.takin.cloud.open.req.scenetask.TaskInspectStartReq;
-import io.shulie.takin.cloud.open.req.scenetask.TaskInspectStopReq;
+import io.shulie.takin.cloud.open.req.scenetask.*;
 import io.shulie.takin.cloud.open.resp.scenemanage.SceneInspectTaskStartResp;
 import io.shulie.takin.cloud.open.resp.scenemanage.SceneInspectTaskStopResp;
 import io.shulie.takin.cloud.open.resp.scenemanage.SceneTryRunTaskStartResp;
@@ -38,6 +28,7 @@ import io.shulie.takin.cloud.open.resp.scenemanage.SceneTryRunTaskStatusResp;
 import io.shulie.takin.cloud.open.resp.scenetask.SceneActionResp;
 import io.shulie.takin.cloud.open.resp.scenetask.SceneJobStateResp;
 import io.shulie.takin.cloud.open.resp.scenetask.SceneTaskAdjustTpsResp;
+import io.shulie.takin.cloud.open.resp.scenetask.SceneTaskStopResp;
 import io.shulie.takin.common.beans.response.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -111,6 +102,15 @@ public class SceneTaskOpenController {
         SceneInspectTaskStartResp startResp = new SceneInspectTaskStartResp();
         BeanUtils.copyProperties(output,startResp);
         return ResponseResult.success(startResp);
+    }
+
+    @PostMapping("/forceStopTask")
+    @ApiOperation(value = "强制停止任务，提示：可能会造成压测数据丢失")
+    ResponseResult<SceneTaskStopResp> forceStopTask(@RequestBody TaskStopReq req) {
+        SceneTaskStopOutput output = sceneTaskService.forceStopTask(req.getReportId(), req.isFinishReport());
+        SceneTaskStopResp stopResp = new SceneTaskStopResp();
+        BeanUtils.copyProperties(output, stopResp);
+        return ResponseResult.success(stopResp);
     }
 
     @PostMapping("/stopInspectTask")

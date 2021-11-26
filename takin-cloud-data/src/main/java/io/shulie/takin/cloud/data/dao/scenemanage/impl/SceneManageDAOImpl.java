@@ -1,5 +1,6 @@
 package io.shulie.takin.cloud.data.dao.scenemanage.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -38,6 +39,9 @@ public class SceneManageDAOImpl
     public void update(SceneManageCreateOrUpdateParam updateParam) {
         SceneManageEntity sceneManageEntity = new SceneManageEntity();
         BeanUtils.copyProperties(updateParam, sceneManageEntity);
+        if (null == updateParam.getUpdateTime()) {
+            updateParam.setUpdateTime(Calendar.getInstance().getTime());
+        }
         this.updateById(sceneManageEntity);
     }
 

@@ -11,12 +11,7 @@ import io.shulie.takin.cloud.biz.input.scenemanage.SceneTaskStartInput;
 import io.shulie.takin.cloud.biz.input.scenemanage.SceneTaskUpdateTpsInput;
 import io.shulie.takin.cloud.biz.output.report.SceneInspectTaskStartOutput;
 import io.shulie.takin.cloud.biz.output.report.SceneInspectTaskStopOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneActionOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneJobStateOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTaskQueryTpsOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTaskStartCheckOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTryRunTaskStartOutput;
-import io.shulie.takin.cloud.biz.output.scenetask.SceneTryRunTaskStatusOutput;
+import io.shulie.takin.cloud.biz.output.scenetask.*;
 import io.shulie.takin.cloud.common.bean.task.TaskResult;
 
 /**
@@ -111,6 +106,11 @@ public interface SceneTaskService {
      * @return -
      */
     SceneInspectTaskStopOutput stopInspectTask(Long sceneId);
+
+    /**
+     * 强制停止任务，不考虑数据的安全性，数据会丢失
+     */
+    SceneTaskStopOutput forceStopTask(Long reportId, boolean isNeedFinishReport);
 
     /**
      * 查询流量试跑状态
