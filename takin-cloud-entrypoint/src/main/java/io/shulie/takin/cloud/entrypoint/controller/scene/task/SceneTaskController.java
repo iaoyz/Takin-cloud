@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.pamirs.takin.entity.domain.vo.report.SceneTaskNotifyParam;
+import io.shulie.takin.cloud.biz.output.scene.manage.SceneContactFileOutput;
 import io.shulie.takin.cloud.sdk.model.request.scenetask.TaskStopReq;
 import io.shulie.takin.cloud.biz.output.scenetask.SceneTaskStopOutput;
 import com.pamirs.takin.entity.domain.vo.scenemanage.FileSplitResultVO;
@@ -108,13 +109,18 @@ public class SceneTaskController {
     @PostMapping(EntrypointUrl.METHOD_SCENE_TASK_FILE_CONTACT)
     @ApiModelProperty(value = "大文件关联场景")
     public ResponseResult<?> preSplitFile(@RequestBody FileSplitResultVO resultVO) {
-        fileSliceService.contactScene(new SceneBigFileSliceParam() {{
-            setFileName(resultVO.getFileName());
-            setSceneId(resultVO.getSceneId());
-            setIsSplit(resultVO.getIsSplit());
-            setIsOrderSplit(resultVO.getIsOrderSplit());
-        }});
-        return ResponseResult.success();
+        try {
+            SceneContactFileOutput output =fileSliceService.contactScene(new SceneBigFileSliceParam() {{
+                setFileName(resultVO.getFileName());
+                setSceneId(resultVO.getSceneId());
+                setIsSplit(resultVO.getIsSplit());
+                setIsOrderSplit(resultVO.getIsOrderSplit());
+            }});
+            return ResponseResult.success(output);
+        }catch (TakinCloudException e){
+            log.error("关联文件与脚本、场景异常",e);
+            return ResponseResult.fail("关联文件与脚本、场景异常", e.getMessage());
+        }
     }
 
     @PostMapping(EntrypointUrl.METHOD_SCENE_TASK_START)
